@@ -71,7 +71,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 					this.refresh();
 				} else {
 					let alert_message = `Report ${this.report_name} generated.
-						<a target='_blank' href="#query-report/${this.report_name}/?prepared_report_name=${data.name}">View</a>`;
+						<a href="#query-report/${this.report_name}/?prepared_report_name=${data.name}">View</a>`;
 					frappe.show_alert({message: alert_message, indicator: 'orange'});
 				}
 			}
@@ -377,7 +377,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 				// Rememeber the name of Prepared Report doc
 				this.prepared_report_doc_name = data.name;
 				let alert_message = `Report initiated. You can track its status
-					<a class='text-info' target='_blank' href=${data.redirect_url}>here</a>`;
+					<a class='text-info' href='#Form/Prepared Report/${data.name}'>here</a>`;
 				frappe.show_alert({message: alert_message, indicator: 'orange'});
 				this.toggle_nothing_to_show(true);
 			});
@@ -616,11 +616,24 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 					{for_print: false, always_show_decimals: true}, data);
 			};
 
+			let compareFn = null;
+			if (column.fieldtype === 'Date') {
+				compareFn = (cell, keyword) => {
+					if (!cell.content) return null;
+					if (keyword.length !== 'YYYY-MM-DD'.length) return null;
+
+					const keywordValue = frappe.datetime.user_to_obj(keyword);
+					const cellValue = frappe.datetime.str_to_obj(cell.content);
+					return [+cellValue, +keywordValue];
+				};
+			}
+
 			return Object.assign(column, {
 				id: column.fieldname,
 				name: column.label,
 				width: parseInt(column.width) || null,
 				editable: false,
+				compareValue: compareFn,
 				format: (value, row, column, data) => {
 					if (this.report_settings.formatter) {
 						return this.report_settings.formatter(value, row, column, data, format_cell);
