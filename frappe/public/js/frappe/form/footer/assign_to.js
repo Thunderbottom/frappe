@@ -3,6 +3,7 @@
 
 frappe.provide("frappe.ui.form");
 
+
 frappe.ui.form.AssignTo = Class.extend({
 	init: function(opts) {
 		var me = this;
