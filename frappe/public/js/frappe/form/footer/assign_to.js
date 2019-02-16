@@ -6,13 +6,6 @@ frappe.provide("frappe.ui.form");
 frappe.ui.form.AssignTo = Class.extend({
 	init: function(opts) {
 		var me = this;
-
-		
-		
-		
-		
-		
-		
 		
 		$.extend(this, opts);
 		this.btn = this.parent.find(".add-assignment").on("click", function() { me.add(); });
