@@ -9,6 +9,8 @@ frappe.ui.form.AssignTo = Class.extend({
 
 		
 		
+		
+		
 		$.extend(this, opts);
 		this.btn = this.parent.find(".add-assignment").on("click", function() { me.add(); });
 		this.btn_wrapper = this.btn.parent();
